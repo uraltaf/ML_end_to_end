@@ -1,13 +1,14 @@
-import sys
 import os
-import numpy as np
-import pandas as pd 
-import dill
+import sys
 
-from src.exception import CustomException
+import numpy as np 
+import pandas as pd
+import dill
+import pickle
 from sklearn.metrics import r2_score
 from sklearn.model_selection import GridSearchCV
 
+from src.exception import CustomException
 
 def save_object(file_path, obj):
     try:
@@ -16,11 +17,11 @@ def save_object(file_path, obj):
         os.makedirs(dir_path, exist_ok=True)
 
         with open(file_path, "wb") as file_obj:
-            dill.dump(obj, file_obj)
+            pickle.dump(obj, file_obj)
 
     except Exception as e:
         raise CustomException(e, sys)
-
+    
 def evaluate_models(X_train, y_train,X_test,y_test,models,param):
     try:
         report = {}
@@ -51,4 +52,11 @@ def evaluate_models(X_train, y_train,X_test,y_test,models,param):
 
     except Exception as e:
         raise CustomException(e, sys)
-     
+    
+def load_object(file_path):
+    try:
+        with open(file_path, "rb") as file_obj:
+            return pickle.load(file_obj)
+
+    except Exception as e:
+        raise CustomException(e, sys)
